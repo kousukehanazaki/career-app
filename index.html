@@ -546,6 +546,42 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
   .sb-line{width:36px;}
   .modal{border-radius:20px 20px 0 0;max-height:90vh;}
   .modal-overlay{align-items:flex-end;padding:0;}
+/* ── CV改善：スマホ固定CTA ── */
+.sticky-cta{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(10px);
+  box-shadow:0 -6px 24px rgba(0,0,0,0.08);
+  z-index:999;
+  border-top:1px solid var(--border);
+}
+.sticky-cta a{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  background:linear-gradient(135deg,var(--coral),#f07850);
+  color:#fff;
+  padding:14px 16px;
+  border-radius:999px;
+  font-family:'Nunito',sans-serif;
+  font-size:0.96rem;
+  font-weight:800;
+  box-shadow:0 4px 16px rgba(232,93,58,0.28);
+}
+.sticky-cta-sub{
+  text-align:center;
+  font-size:0.68rem;
+  color:var(--ink-soft);
+  margin-top:7px;
+  line-height:1.5;
+}
+@media (min-width: 769px){
+  .sticky-cta{ display:none; }
+}
 }
 </style>
 </head>
@@ -711,7 +747,10 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
           <div class="cta-pt">📞 電話で気軽に相談</div>
           <div class="cta-pt">🔒 押し売りなし</div>
         </div>
-        <button class="btn-p" onclick="goS3()">無料で相談してみる 💬</button>
+        <button class="btn-p" onclick="goS3()">30秒で無料相談する 💬</button>
+<p style="margin-top:10px;font-size:0.82rem;color:#475569;line-height:1.7;">
+  完全無料 / 無理な求人紹介なし / まだ転職未定でもOK
+</p>
       </div>
 
       <div style="margin-top:18px;text-align:center">
@@ -727,6 +766,21 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
       </div>
 
       <div class="form-wrap" id="fwrap">
+  <div id="entry-form" style="margin-bottom:6px;"></div>
+
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px 16px;margin-bottom:8px;">
+    <div style="font-weight:700;margin-bottom:8px;color:#0f172a;">安心してご相談いただけます</div>
+    <ul style="margin:0;padding-left:18px;line-height:1.8;color:#475569;font-size:0.85rem;">
+      <li>完全無料で相談可能</li>
+      <li>無理な求人紹介はありません</li>
+      <li>建設業・若手転職の相談歓迎</li>
+      <li>まだ転職未定でも大丈夫です</li>
+    </ul>
+  </div>
+
+  <p style="font-size:0.88rem;color:#475569;margin-bottom:10px;line-height:1.7;text-align:center;">
+    入力は30秒ほどで完了します。必須項目だけご入力ください。
+  </p>>
         <div>
           <input type="text" class="finput required-mark" id="f-name" placeholder="お名前（ニックネームでもOK！）">
         </div>
@@ -759,8 +813,12 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
           </select>
         </div>
         <button class="btn-p" onclick="submitForm()" style="margin-top:6px;font-size:0.93rem">
-  相談を予約する（無料）🎉
-        </button>
+  30秒で無料相談を予約する 🎉
+</button>
+
+<p style="margin-top:10px;font-size:0.82rem;color:#475569;line-height:1.7;text-align:center;">
+  完全無料 / 無理な営業なし / まだ転職未定でもOK
+</p>
 
         <div style="margin-top:14px;text-align:left;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px 14px;">
           <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;line-height:1.7;font-size:0.92rem;color:#334155;">
@@ -833,6 +891,11 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
     <p style="font-size:0.68rem;color:var(--ink-soft);">© 2025 SOZO INC. All rights reserved.</p>
   </div>
 </footer>
+
+<div class="sticky-cta">
+  <a href="#entry-form">30秒で無料相談する</a>
+  <div class="sticky-cta-sub">完全無料 / 押し売りなし / 転職未定でもOK</div>
+</div>
 
 <!-- ── CAREER DETAIL MODAL ── -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
