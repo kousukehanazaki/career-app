@@ -759,10 +759,33 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
           </select>
         </div>
         <button class="btn-p" onclick="submitForm()" style="margin-top:6px;font-size:0.93rem">
-          相談を予約する（無料）🎉
+  相談を予約する（無料）🎉
         </button>
-        <p class="form-note">🔒 個人情報は面談の手配のみに使用します。不要な連絡は一切しません。<br><span style="color:var(--coral)">※</span> のついた項目は必須です。</p>
-      </div>
+
+        <div style="margin-top:14px;text-align:left;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px 14px;">
+          <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;line-height:1.7;font-size:0.92rem;color:#334155;">
+            <input type="checkbox" id="agree-policy" style="margin-top:4px;transform:scale(1.1);" />
+            <span>
+              <a href="./privacy.html" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+              および
+              <a href="./terms.html" target="_blank" rel="noopener noreferrer">利用規約</a>
+              に同意のうえ送信します。
+            </span>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;line-height:1.7;font-size:0.92rem;color:#334155;margin-top:10px;">
+            <input type="checkbox" id="agree-share" style="margin-top:4px;transform:scale(1.1);" />
+            <span>
+              求人紹介のため、応募先企業への情報提供が必要な場合に限り、
+              私の個人情報を提供することに同意します。
+            </span>
+          </label>
+        </div>
+
+        <p class="form-note">
+          🔒 個人情報は転職相談、面談調整、求人紹介のために利用します。<br>
+          <span style="color:var(--coral)">※</span> のついた項目は必須です。
+        </p>
 
       <div style="margin-top:18px;text-align:center">
         <button class="btn-s" onclick="backS2()">← 診断結果に戻る</button>
@@ -1122,28 +1145,30 @@ function reset(){
 
 // ── FORM SUBMIT ──
 async function submitForm(){
-  const name=document.getElementById('f-name').value.trim();
-  const area=document.getElementById('f-area').value.trim();
-  const tel=document.getElementById('f-tel').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  const income=document.getElementById('f-income').value;
-  const timing=document.getElementById('f-timing').value;
+  const name = document.getElementById('f-name').value.trim();
+  const area = document.getElementById('f-area').value.trim();
+  const tel = document.getElementById('f-tel').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const income = document.getElementById('f-income').value;
+  const timing = document.getElementById('f-timing').value;
 
-  if(!name||!area||!tel||!email){toast('必須項目をすべて入力してください😊');return;}
-  if(!/^[\w.+\-]+@[\w\-]+\.[a-z]{2,}$/i.test(email)){toast('メールアドレスを正しく入力してください');return;}
+  if(!name || !area || !tel || !email){
+    alert('必須項目を入力してください。');
+    return;
+  }
 
-  const btn=document.querySelector('#fwrap .btn-p');
-  btn.textContent='送信中…'; btn.disabled=true;
+  const agreePolicy = document.getElementById('agree-policy');
+  const agreeShare = document.getElementById('agree-share');
 
-  const d=D[mbti];
-  const payload={
-    timestamp: new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'}),
-    name, area, tel, email,
-    income: income||'未選択',
-    timing: timing||'未選択',
-    mbti,
-    mbtiType: d?.nick||''
-  };
+  if (!agreePolicy || !agreePolicy.checked) {
+    alert('プライバシーポリシーと利用規約への同意が必要です。');
+    return;
+  }
+
+  if (!agreeShare || !agreeShare.checked) {
+    alert('求人紹介に伴う個人情報の提供について同意してください。');
+    return;
+  }
 
   try {
     await fetch(GAS_URL, {
