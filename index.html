@@ -1324,10 +1324,7 @@ async function submitForm(){
     return;
   }
 
-  if (!agreeShare || !agreeShare.checked) {
-    alert('求人紹介に伴う個人情報の提供について同意してください。');
-    return;
-  }
+  
 
   try {
     await fetch(GAS_URL, {
