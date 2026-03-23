@@ -546,6 +546,8 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
   .sb-line{width:36px;}
   .modal{border-radius:20px 20px 0 0;max-height:90vh;}
   .modal-overlay{align-items:flex-end;padding:0;}
+}
+
 /* ── CV改善：スマホ固定CTA ── */
 .sticky-cta{
   position:fixed;
@@ -579,10 +581,11 @@ main { position:relative; z-index:1; max-width:780px; margin:0 auto; padding:0 2
   margin-top:7px;
   line-height:1.5;
 }
-@media (min-width: 769px){
+
+@media (min-width:769px){
   .sticky-cta{ display:none; }
 }
-}
+
 </style>
 </head>
 <body>
@@ -1494,7 +1497,7 @@ function openModal(careerName, careerEmoji, idx){
       <div class="salary-card">
         <div style="flex:1">
           <div class="salary-label">
-            想定年収レンジ（20〜30代）${job.n.includes('営業職') ? ' +インセンティブ' : ''}
+            想定年収レンジ（20〜30代）${careerName.includes('営業職') ? ' +インセンティブ' : ''}
           </div>
           <div class="salary-range">${det.salary}</div>
           <div class="salary-note">${det.salaryNote}</div>
