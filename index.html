@@ -1302,75 +1302,48 @@ function reset(){
 }
 
 // ── FORM SUBMIT ──
-function submitForm() {
-  const name = document.getElementById('f-name').value.trim();
-  const area = document.getElementById('f-area').value.trim();
-  const tel = document.getElementById('f-tel').value.trim();
+async function submitForm() {
+  const name  = document.getElementById('f-name').value.trim();
+  const area  = document.getElementById('f-area').value.trim();
+  const tel   = document.getElementById('f-tel').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const income = document.getElementById('f-income').value;
   const timing = document.getElementById('f-timing').value;
-  const agreePolicy = document.getElementById('agree-policy');
 
+  
   if (!name || !area || !tel || !email) {
     alert('必須項目を入力してください。');
     return;
   }
 
-  if (!agreePolicy || !agreePolicy.checked) {
+  const agreePolicy = document.getElementById('agree-policy');
+  if (agreePolicy && !agreePolicy.checked) {
     alert('プライバシーポリシーに同意してください。');
     return;
   }
 
   const btn = document.querySelector('#fwrap .btn-p');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = '送信中...';
-  }
+  if (btn) { btn.disabled = true; btn.textContent = '送信中…'; }
 
   const d = D[mbti];
-  const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-
-  let iframe = document.getElementById('gas_iframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.name = 'gas_iframe';
-    iframe.id = 'gas_iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = GAS_URL;
-  form.target = 'gas_iframe';
-  form.style.display = 'none';
-
-  const fields = {
-    timestamp: timestamp,
-    name: name,
-    area: area,
-    tel: tel,
-    email: email,
-    income: income || '未選択',
-    timing: timing || '未選択',
-    mbti: mbti || '',
+  const payload = {
+    timestamp : new Date().toLocaleString('ja-JP', {timeZone:'Asia/Tokyo'}),
+    name, area, tel, email,
+    income  : income  || '未選択',
+    timing  : timing  || '未選択',
+    mbti    : mbti    || '',
     mbtiType: d?.nick || ''
   };
 
-  Object.entries(fields).forEach(([key, value]) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = value;
-    form.appendChild(input);
-  });
+  try {
+    await fetch(GAS_URL, {
+      method : 'POST',
+      mode   : 'no-cors',
+      body   : JSON.stringify(payload)
+    });
+  } catch(err) {}
 
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(() => {
-    showSuccess(name);
-  }, 1000);
+  showSuccess(name);
 }
 
 
@@ -1699,46 +1672,6 @@ function closeModal(e){
 // ESCキーでモーダルを閉じる
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(null); });
 
-function submitForm() {
-  const name = document.getElementById('f-name').value.trim();
-  const area = document.getElementById('f-area').value.trim();
-  const tel = document.getElementById('f-tel').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const income = document.getElementById('f-income').value;
-  const timing = document.getElementById('f-timing').value;
-
-  const d = D[mbti];
-  const timestamp = new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
-
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = GAS_URL;
-  form.style.display = "none";
-
-  const fields = {
-    timestamp,
-    name,
-    area,
-    tel,
-    email,
-    income,
-    timing,
-    mbti,
-    mbtiType: d?.nick || ""
-  };
-
-  for (const key in fields) {
-    const input = document.createElement("input");
-    input.name = key;
-    input.value = fields[key];
-    form.appendChild(input);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-
-  showSuccess(name);
-}
 
 
 </script>
