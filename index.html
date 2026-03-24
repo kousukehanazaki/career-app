@@ -1650,48 +1650,50 @@ function closeModal(e){
 
 // ESCキーでモーダルを閉じる
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(null); });
-</script>
 
-<!--
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【GASスクリプト設定手順】
+function submitForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const area = document.getElementById('f-area').value.trim();
+  const tel = document.getElementById('f-tel').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const income = document.getElementById('f-income').value;
+  const timing = document.getElementById('f-timing').value;
 
-① Google スプレッドシートを新規作成
-   1行目に以下のヘッダーを記入:
-   A:受付日時 B:名前 C:希望勤務地 D:電話番号 E:メールアドレス F:希望年収 G:転職希望時期 H:MBTIタイプ I:MBTIニックネーム
+  const d = D[mbti];
+  const timestamp = new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
 
-② 拡張機能 → Apps Script を開いて以下を貼り付け
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = GAS_URL;
+  form.style.display = "none";
 
-function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([
-    data.timestamp,
-    data.name,
-    data.area,
-    data.tel,
-    data.email,
-    data.income,
-    data.timing,
-    data.mbti,
-    data.mbtiType
-  ]);
-  return ContentService.createTextOutput(
-    JSON.stringify({result:'success'})
-  ).setMimeType(ContentService.MimeType.JSON);
+  const fields = {
+    timestamp,
+    name,
+    area,
+    tel,
+    email,
+    income,
+    timing,
+    mbti,
+    mbtiType: d?.nick || ""
+  };
+
+  for (const key in fields) {
+    const input = document.createElement("input");
+    input.name = key;
+    input.value = fields[key];
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+
+  showSuccess(name);
 }
 
-③ デプロイ → 新しいデプロイ → ウェブアプリ
-   ・実行するユーザー: 自分
-   ・アクセスできるユーザー: 全員
-   → デプロイしてURLをコピー
 
-④ このHTMLファイルの
-   const GAS_URL = 'https://script.google.com/macros/s/AKfycbxL90nIyApE1tM57AX0rloozFoiTYxY_VYcwVRt5Xc0jDW1XcUfi91JQcEWJYl-_XJpmA/exec';
-   の部分を取得したURLに書き換える
-
-━━━━━━━━━━━━━━━━━━━━━━━
--->
+</script>
 </body>
 </html>
 
