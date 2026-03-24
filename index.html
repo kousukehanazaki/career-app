@@ -1302,67 +1302,36 @@ function reset(){
 }
 
 // ── FORM SUBMIT ──
-async function submitForm() {
-  const name = document.getElementById('f-name').value.trim();
-  const area = document.getElementById('f-area').value.trim();
-  const tel = document.getElementById('f-tel').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const income = document.getElementById('f-income').value;
-  const timing = document.getElementById('f-timing').value;
-  const agreePolicy = document.getElementById('agree-policy');
-
-  if (!name || !area || !tel || !email) {
-    alert('必須項目を入力してください。');
-    return;
-  }
-
-  if (!agreePolicy || !agreePolicy.checked) {
-    alert('プライバシーポリシーに同意してください。');
-    return;
-  }
-
-  const btn = document.querySelector('#fwrap .btn-p');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = '送信中...';
-  }
-
+function showSuccess(name) {
   const d = D[mbti];
-  const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  document.getElementById('s3').innerHTML = `
+    <div class="success">
+      <span class="s-e">🎉</span>
+      <h3>${name}さんの予約を<br>受け付けました！</h3>
+      <p>SOZOのキャリアアドバイザーが<br><strong>24時間以内にお電話</strong>いたします。<br>ご不明な点はお気軽にどうぞ！</p>
+      <div class="success-badge">🔮 ${mbti} - ${d?.nick || ''}</div>
+    </div>
+  `;
+  setStep(3);
+}
 
-  const formData = new URLSearchParams();
-  formData.append('timestamp', timestamp);
-  formData.append('name', name);
-  formData.append('area', area);
-  formData.append('tel', tel);
-  formData.append('email', email);
-  formData.append('income', income || '未選択');
-  formData.append('timing', timing || '未選択');
-  formData.append('mbti', mbti || '');
-  formData.append('mbtiType', d?.nick || '');
+function setStep(n) {
+  for (let i = 1; i <= 3; i++) {
+    const s = document.getElementById('sb' + i);
+    if (!s) continue;
 
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-      },
-      body: formData.toString()
-    });
+    s.classList.remove('active', 'done');
+    if (i < n) s.classList.add('done');
+    if (i === n) s.classList.add('active');
 
-    showSuccess(name);
-
-  } catch (err) {
-    console.error('送信エラー:', err);
-    alert('送信に失敗しました。時間をおいて再度お試しください。');
-
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = '無料でキャリア相談する 🎉';
+    if (i < 3) {
+      const line = document.getElementById('sbl' + i);
+      if (line) line.classList.toggle('done', i < n);
     }
   }
 }
+
+
 function showSuccess(name) {
   const d = D[mbti];
   document.getElementById('s3').innerHTML = `
